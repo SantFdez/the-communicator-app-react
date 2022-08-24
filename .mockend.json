@@ -1,6 +1,6 @@
 {
   "Card": {
-    "tittle": {
+    "title": {
       "loremWords": { "minLength": 5, "maxLength": 20 }
     },
     "question": {
