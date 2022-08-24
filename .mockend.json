@@ -1,13 +1,16 @@
 {
   "Card": {
     "tittle": {
-      "string": {}
+      "loremWords": { "minLength": 2, "maxLength": 3 }
     },
     "question": {
-      "string": ["working from home", "watching Netflix"]
+      "regexp": "[A-Za-z.,;'\"\\s? ]"
     },
     "isActive": {
       "boolean": {}
     }
+  },
+  "Instruction": {
+    "loremSentences": { "minLength": 200, "maxLength": 300 }
   }
 }
