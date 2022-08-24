@@ -1,10 +1,10 @@
 {
   "Card": {
     "tittle": {
-      "loremWords": { "minLength": 2, "maxLength": 3 }
+      "loremWords": { "minLength": 5, "maxLength": 20 }
     },
     "question": {
-      "regexp": "[A-Za-z.,;'\"\\s? ]"
+      "regexp": "[A-Za-z.,;'\"\\s? ]{6,20}"
     },
     "isActive": {
       "boolean": {}
