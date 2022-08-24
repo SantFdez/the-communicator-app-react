@@ -4,7 +4,7 @@
       "loremWords": { "minLength": 5, "maxLength": 20 }
     },
     "question": {
-      "regexp": "[A-Za-z.,;'\"\\s? ]{6,20}"
+      "loremSentences": { "minLength": 50, "maxLength": 100 }
     },
     "isActive": {
       "boolean": {}
@@ -12,7 +12,7 @@
   },
   "Instruction": {
     "howToPlay": {
-      "loremSentences": { "minLength": 200, "maxLength": 300 }
+      "loremSentences": { "minLength": 500, "maxLength": 600 }
     }
   }
 }
