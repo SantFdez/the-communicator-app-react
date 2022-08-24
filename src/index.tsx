@@ -24,6 +24,14 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
+        <Route
+          index
+          element={
+            <main style={{ padding: "1rem" }}>
+              <p>Welcome to The Communicator</p>
+            </main>
+          }
+        />
         <Route path="instruction" element={<Instructions />} />
         <Route path="cards" element={<Cards />}>
           <Route
