@@ -11,6 +11,8 @@
     }
   },
   "Instruction": {
-    "loremSentences": { "minLength": 200, "maxLength": 300 }
+    "howToPlay": {
+      "loremSentences": { "minLength": 200, "maxLength": 300 }
+    }
   }
 }
