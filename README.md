@@ -1,2 +1,4 @@
-# the-communicator-app-react
-The Communicator Game Cards in React
+# The Communicator Game Cards
+This game is a digitalization of "El Comunicario®", a Cards Game created by Virginia Gawel.
+
+Centro Transpersonal de Buenos Aires®
