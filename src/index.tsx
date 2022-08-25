@@ -22,31 +22,33 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 // Router example
 root.render(
   <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route
-          index
-          element={
-            <main style={{ padding: "1rem" }}>
-              <p>Welcome to The Communicator</p>
-            </main>
-          }
-        />
-        <Route path="instruction" element={<Instructions />} />
-        <Route path="cards" element={<Cards />}>
+    <ChakraProvider>
+      <Routes>
+        <Route path="/" element={<App />}>
           <Route
             index
             element={
               <main style={{ padding: "1rem" }}>
-                <p>Select a card</p>
+                <p>Welcome to The Communicator</p>
               </main>
             }
           />
-          <Route path=":cardId" element={<Card />} />
+          <Route path="instructions" element={<Instructions />} />
+          <Route path="cards" element={<Cards />}>
+            <Route
+              index
+              element={
+                <main style={{ padding: "1rem" }}>
+                  <p>Select a card</p>
+                </main>
+              }
+            />
+            <Route path=":cardId" element={<Card />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+      </Routes>
+    </ChakraProvider>
   </BrowserRouter>
 );
 

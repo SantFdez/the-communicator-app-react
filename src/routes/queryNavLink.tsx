@@ -1,11 +1,6 @@
 import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
 
-// export interface Params {
-//   to: {};
-//   props: {}
-// }
-
 export default function QueryNavLink({
   to,
   ...props
