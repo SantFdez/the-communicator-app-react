@@ -3,4 +3,6 @@ export interface CardModel {
     isActive: boolean;
     question: string;
     title: string;
+    categoryName: string;
+    categoryImg: string;
 }

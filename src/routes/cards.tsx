@@ -4,7 +4,7 @@ import { Invoice } from "../data";
 import { getInvoices } from "../data";
 import { CardModel } from "../models/Card";
 import QueryNavLink from "./queryNavLink";
-import { Box, Divider, Spinner } from "@chakra-ui/react";
+import { Box, Divider, Spinner, useToast } from "@chakra-ui/react";
 import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 
@@ -14,17 +14,43 @@ export default function Cards() {
   let [filteredCards, setFilteredCards] = useState<CardModel[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
+  let [cards, setCards] = useState<CardModel[]>([]);
+  const toast = useToast();
 
-  // useEffect(() => {
-  //   setFilteredCards(
-  //     cards.filter((card) => {
-  //       let filter = searchParams.get("filter");
-  //       if (!filter) return true;
-  //       let name = card.title.toLowerCase();
-  //       return name.startsWith(filter.toLowerCase());
-  //     })
-  //   );
-  // }, [searchParams]);
+  useEffect(() => {
+    // setFilteredCards(
+    //   cards.filter((card) => {
+    //     let filter = searchParams.get("filter");
+    //     if (!filter) return true;
+    //     let name = card.title.toLowerCase();
+    //     return name.startsWith(filter.toLowerCase());
+    //   })
+    // );
+    setIsLoaded(false);
+    fetch(
+      `https://mockend.com/SantFdez/the-communicator-app-react/cards?limit=40&title_contains=${searchParams.get(
+        "filter"
+      )}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setFilteredCards(data);
+        // setCards(data);
+      })
+      .catch((err) => {
+        setError(error);
+        console.log(err.message);
+        toast({
+          title: `API error! Please try again.`,
+          status: "error",
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        setIsLoaded(true);
+      });;
+  }, [searchParams]);
 
   useEffect(() => {
     fetch(
@@ -33,18 +59,25 @@ export default function Cards() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setIsLoaded(true);
         setFilteredCards(data);
+        setCards(data);
       })
       .catch((err) => {
-        setIsLoaded(true);
         setError(error);
         console.log(err.message);
+        toast({
+          title: `API error! Please try again.`,
+          status: "error",
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        setIsLoaded(true);
       });
   }, []);
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div></div>;
   } else {
     let loading = !isLoaded ? (
       <Box padding="6" boxShadow="lg" bg="white">
@@ -55,7 +88,7 @@ export default function Cards() {
     return (
       <div style={{ display: "flex" }}>
         <nav style={{ padding: "1em 0 0 2em", borderRight: "inset 1px" }}>
-          {loading}
+          
           <Input
             variant="flushed"
             placeholder="Search Card"
@@ -70,6 +103,7 @@ export default function Cards() {
               }
             }}
           />
+          {loading}
           {filteredCards.map((card) => (
             <QueryNavLink to={`/cards/${card.id}`} key={card.id}>
               {card.title}

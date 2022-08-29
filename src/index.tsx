@@ -8,6 +8,8 @@ import Instructions from "./routes/instructions";
 import Cards from "./routes/cards";
 import { Card } from "./routes/card";
 import { NotFound } from "./components/NotFound";
+import SimpleFooter from "./components/SimpleFooter";
+import SimpleNavBar from "./components/SimpleNavBar";
 
 const container = document.getElementById("app");
 if (container === null) throw new Error("Missing root element");
@@ -48,6 +50,7 @@ root.render(
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      <SimpleFooter />
     </ChakraProvider>
   </BrowserRouter>
 );
