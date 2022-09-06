@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, createContext } from "react";
 import { NotFound } from "../components/NotFound";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { CardModel } from "../models/Card";
@@ -16,49 +16,95 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import "../css/main.css";
+import { AppCtx, useAppCtx } from "../components/App";
 
-export function Card() {
+interface props {
+  cardObj?: CardModel;
+  updateCurrentCard: (cardId: string) => void;
+}
+
+export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
   let navigate = useNavigate();
   let location = useLocation();
+
+  const appContext = useContext(AppCtx); // preferible
+
+  // Which is the difference?
+  console.log("Received context", appContext);
+  console.log("Global context", useAppCtx());
+
+  console.log("cardObj", cardObj);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [card, setCard] = useState<CardModel>();
+  const colorGray = useColorModeValue("gray.700", "white");
+  const colorWhite = useColorModeValue("white", "gray.900");
 
   const params = useParams<{ cardId: string }>();
- 
+
+  // mock service worker
+
+  // test, al tipear en busqueda que vaya al API
 
   const toast = useToast();
 
-  // const invoice = getInvoice(parseInt(params.cardId, 10));
-  // if (!invoice) return <NotFound />;
-
+  // useEffect to update useContext var
   useEffect(() => {
-    setIsLoaded(false);
-    fetch(
-      "https://mockend.com/SantFdez/the-communicator-app-react/card/" +
-        params.cardId
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setIsLoaded(true);
-        setCard(data);
-      })
-      .catch((err) => {
-        setIsLoaded(true);
-        setError(error);
-        console.log(err.message);
-        toast({
-          title: `API error! Please try again.`,
-          status: "error",
-          isClosable: true,
-        });
-      });
-  }, [params.cardId]);
+    if (appContext !== undefined) {
+      setCard(appContext);
+      setIsLoaded(true);
+      console.log("Loading card from appContext");
+    } else {
+      console.log("Receiving undefined card appContext");
+      let url = window.location.pathname;
+      let currentIdCard = url.split("/")[2];
+      console.log(url.split("/"))
+      console.log(currentIdCard);
+      updateCurrentCard(currentIdCard);
+      // setIsLoaded(false);
+    }
+  }, [appContext]);
+
+  // useEffect to update using Props
+  // useEffect(() => {
+  //   if (cardObj !== undefined) {
+  //     setCard(cardObj);
+  //     setIsLoaded(true);
+  // console.log("Loading card from Props");
+  //   } else {
+  // console.log("Receiving undefined card from Props");
+  //     // setIsLoaded(false);
+  //   }
+  // }, [cardObj]);
+
+  // usseEffect to Fetch API and get Card information based on CardId
+  // useEffect(() => {
+  //   setIsLoaded(false);
+  //   fetch(
+  //     "https://mockend.com/SantFdez/the-communicator-app-react/card/" +
+  //       params.cardId
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       setIsLoaded(true);
+  //       setCard(data);
+  //     })
+  //     .catch((err) => {
+  //       setIsLoaded(true);
+  //       setError(error);
+  //       console.log(err.message);
+  //       toast({
+  //         title: `API error! Please try again.`,
+  //         status: "error",
+  //         isClosable: true,
+  //       });
+  //     });
+  // }, [params.cardId]);
 
   if (!params.cardId) return <NotFound />;
-  
+
   if (error) {
     return <div></div>;
   }
@@ -70,7 +116,7 @@ export function Card() {
           <Box
             maxW={"445px"}
             w={"full"}
-            bg={useColorModeValue("white", "gray.900")}
+            bg={colorWhite}
             boxShadow={"2xl"}
             rounded={"md"}
             p={6}
@@ -106,7 +152,7 @@ export function Card() {
                     {card?.categoryName}
                   </Text>
                   <Heading
-                    color={useColorModeValue("gray.700", "white")}
+                    color={colorGray}
                     fontSize={"2xl"}
                     fontFamily={"body"}
                   >
@@ -134,4 +180,4 @@ export function Card() {
       </>
     </main>
   );
-}
+};

@@ -1,66 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { NavLink, Outlet, useSearchParams } from "react-router-dom";
-import { Invoice } from "../data";
-import { getInvoices } from "../data";
 import { CardModel } from "../models/Card";
 import QueryNavLink from "./queryNavLink";
 import { Box, Divider, Spinner, useToast } from "@chakra-ui/react";
 import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
+import debounce from "lodash.debounce";
 
-export default function Cards() {
+interface props {
+  onCardClick: (card: CardModel) => void;
+  updateCardId: string | undefined;
+}
+
+export const Cards: React.FC<props> = ({ onCardClick, updateCardId }) => {
   let [searchParams, setSearchParams] = useSearchParams();
   let [filterStr, setFilterStr] = useState("");
   let [filteredCards, setFilteredCards] = useState<CardModel[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
-  let [cards, setCards] = useState<CardModel[]>([]);
   const toast = useToast();
 
-  useEffect(() => {
-    // setFilteredCards(
-    //   cards.filter((card) => {
-    //     let filter = searchParams.get("filter");
-    //     if (!filter) return true;
-    //     let name = card.title.toLowerCase();
-    //     return name.startsWith(filter.toLowerCase());
-    //   })
-    // );
-    setIsLoaded(false);
-    fetch(
-      `https://mockend.com/SantFdez/the-communicator-app-react/cards?limit=40&title_contains=${searchParams.get(
-        "filter"
-      )}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setFilteredCards(data);
-        // setCards(data);
-      })
-      .catch((err) => {
-        setError(error);
-        console.log(err.message);
-        toast({
-          title: `API error! Please try again.`,
-          status: "error",
-          isClosable: true,
-        });
-      })
-      .finally(() => {
-        setIsLoaded(true);
-      });;
-  }, [searchParams]);
+  const debouncedFilter = useCallback(
+    debounce((filter: string) => {
+      console.log("====>ASAS", filter);
+      setSearchParams({ filter });
+    }, 500),
+    []
+  );
+
+  const doCardsFilter = (filter: string) => {
+    setFilterStr(filter);
+    if (!filter) return setSearchParams({});
+    debouncedFilter(filter);
+  };
+
+  const updateSelectedCard = () => {
+    console.log("Received updateCardId at cards.tsx ", updateCardId);
+    if (updateCardId) {
+      const selectedCard = filteredCards.find((card) => {
+        return card.id == Number(updateCardId);
+      });
+      if (selectedCard) {
+        onCardClick(selectedCard);
+      }
+    }
+  };
+
+  // obtener id del URL
 
   useEffect(() => {
-    fetch(
-      "https://mockend.com/SantFdez/the-communicator-app-react/cards?limit=40"
-    )
+    let URL;
+    if (searchParams.get("filter") != null) {
+      URL = `https://mockend.com/SantFdez/the-communicator-app-react/cards?limit=40&title_contains=${searchParams.get(
+        "filter"
+      )}`;
+      if (filterStr != null) {
+        setFilterStr(searchParams.get("filter") ?? "");
+      }
+    } else {
+      URL =
+        "https://mockend.com/SantFdez/the-communicator-app-react/cards?limit=40";
+    }
+    setIsLoaded(false);
+    fetch(URL)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setFilteredCards(data);
-        setCards(data);
       })
       .catch((err) => {
         setError(error);
@@ -74,7 +80,11 @@ export default function Cards() {
       .finally(() => {
         setIsLoaded(true);
       });
-  }, []);
+  }, [searchParams]);
+
+  useEffect(() => {
+    updateSelectedCard();
+  }, [filteredCards]);
 
   if (error) {
     return <div></div>;
@@ -88,24 +98,22 @@ export default function Cards() {
     return (
       <div style={{ display: "flex" }}>
         <nav style={{ padding: "1em 0 0 2em", borderRight: "inset 1px" }}>
-          
           <Input
             variant="flushed"
             placeholder="Search Card"
             value={filterStr || ""}
             onChange={(event) => {
-              let filter = event.target.value;
-              setFilterStr(filter);
-              if (filter) {
-                setSearchParams({ filter });
-              } else {
-                setSearchParams({});
-              }
+              doCardsFilter(event.target.value);
             }}
           />
           {loading}
           {filteredCards.map((card) => (
-            <QueryNavLink to={`/cards/${card.id}`} key={card.id}>
+            <QueryNavLink
+              to={`/cards/${card.id}`}
+              key={card.id}
+              onCardClick={onCardClick}
+              cardObj={card}
+            >
               {card.title}
             </QueryNavLink>
           ))}
@@ -114,4 +122,4 @@ export default function Cards() {
       </div>
     );
   }
-}
+};
