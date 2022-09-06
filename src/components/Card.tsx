@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
-import { NotFound } from "../components/NotFound";
+import { NotFound } from "./NotFound";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { CardModel } from "../models/Card";
 import {
@@ -16,16 +16,14 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import "../css/main.css";
-import { AppCtx, useAppCtx } from "../components/App";
+import { AppCtx, useAppCtx } from "./App";
 
 interface props {
   cardObj?: CardModel;
-  updateCurrentCard: (cardId: string) => void;
+  updateCurrentCard?: (cardId: string) => void;
 }
 
 export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
-  let navigate = useNavigate();
-  let location = useLocation();
 
   const appContext = useContext(AppCtx); // preferible
 
@@ -44,24 +42,24 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
   const params = useParams<{ cardId: string }>();
 
   // mock service worker
-
   // test, al tipear en busqueda que vaya al API
-
-  const toast = useToast();
 
   // useEffect to update useContext var
   useEffect(() => {
-    if (appContext !== undefined) {
-      setCard(appContext);
+    if (cardObj !== undefined) {
+      // setCard(appContext);
+      setCard(cardObj);
       setIsLoaded(true);
       console.log("Loading card from appContext");
     } else {
       console.log("Receiving undefined card appContext");
       let url = window.location.pathname;
       let currentIdCard = url.split("/")[2];
-      console.log(url.split("/"))
+      console.log(url.split("/"));
       console.log(currentIdCard);
-      updateCurrentCard(currentIdCard);
+      if (updateCurrentCard) {
+        updateCurrentCard(currentIdCard);
+      }
       // setIsLoaded(false);
     }
   }, [appContext]);
@@ -103,12 +101,13 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
   //     });
   // }, [params.cardId]);
 
-  if (!params.cardId) return <NotFound />;
+  // if (!params.cardId) return <NotFound />;
 
   if (error) {
     return <div></div>;
   }
 
+  console.log("CARD ACTUAL", card);
   return (
     <main style={{ padding: "1rem", width: "100%" }}>
       <>
@@ -143,6 +142,7 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
               {isLoaded ? (
                 <>
                   <Text
+                    data-testid="categoryName"
                     color={"green.500"}
                     textTransform={"uppercase"}
                     fontWeight={800}
@@ -152,13 +152,16 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
                     {card?.categoryName}
                   </Text>
                   <Heading
+                    data-testid="cardTitle"
                     color={colorGray}
                     fontSize={"2xl"}
                     fontFamily={"body"}
                   >
                     {card?.title}
                   </Heading>
-                  <Text color={"gray.500"}>{card?.question}</Text>
+                  <Text data-testid="cardQuestion" color={"gray.500"}>
+                    {card?.question}
+                  </Text>
                 </>
               ) : (
                 <SkeletonText mt="10" noOfLines={4} spacing="4" />

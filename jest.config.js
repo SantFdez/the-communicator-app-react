@@ -7,6 +7,7 @@ module.exports = {
   // using ts-jest
   transform: {
     "^.+\\.tsx?$": "ts-jest",
+    ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
   },
 
   // Runs special logic, such as cleaning up components

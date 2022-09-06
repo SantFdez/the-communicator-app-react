@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { NavLink, Outlet, useSearchParams } from "react-router-dom";
 import { CardModel } from "../models/Card";
-import QueryNavLink from "./queryNavLink";
+import QueryNavLink from "./QueryNavLink";
 import { Box, Divider, Spinner, useToast } from "@chakra-ui/react";
 import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
