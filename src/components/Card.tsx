@@ -34,7 +34,6 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
   console.log("cardObj", cardObj);
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
   const [card, setCard] = useState<CardModel>();
   const colorGray = useColorModeValue("gray.700", "white");
   const colorWhite = useColorModeValue("white", "gray.900");
@@ -46,9 +45,8 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
 
   // useEffect to update useContext var
   useEffect(() => {
-    if (cardObj !== undefined) {
-      // setCard(appContext);
-      setCard(cardObj);
+    if (appContext !== undefined) {
+      setCard(appContext);
       setIsLoaded(true);
       console.log("Loading card from appContext");
     } else {
@@ -64,50 +62,6 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
     }
   }, [appContext]);
 
-  // useEffect to update using Props
-  // useEffect(() => {
-  //   if (cardObj !== undefined) {
-  //     setCard(cardObj);
-  //     setIsLoaded(true);
-  // console.log("Loading card from Props");
-  //   } else {
-  // console.log("Receiving undefined card from Props");
-  //     // setIsLoaded(false);
-  //   }
-  // }, [cardObj]);
-
-  // usseEffect to Fetch API and get Card information based on CardId
-  // useEffect(() => {
-  //   setIsLoaded(false);
-  //   fetch(
-  //     "https://mockend.com/SantFdez/the-communicator-app-react/card/" +
-  //       params.cardId
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       setIsLoaded(true);
-  //       setCard(data);
-  //     })
-  //     .catch((err) => {
-  //       setIsLoaded(true);
-  //       setError(error);
-  //       console.log(err.message);
-  //       toast({
-  //         title: `API error! Please try again.`,
-  //         status: "error",
-  //         isClosable: true,
-  //       });
-  //     });
-  // }, [params.cardId]);
-
-  // if (!params.cardId) return <NotFound />;
-
-  if (error) {
-    return <div></div>;
-  }
-
-  console.log("CARD ACTUAL", card);
   return (
     <main style={{ padding: "1rem", width: "100%" }}>
       <>
