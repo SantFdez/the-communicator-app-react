@@ -86,6 +86,8 @@ export const Cards: React.FC<props> = ({ onCardClick, updateCardId }) => {
     updateSelectedCard();
   }, [filteredCards]);
 
+  console.log(filteredCards);
+
   if (error) {
     return <div></div>;
   } else {

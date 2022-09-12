@@ -28,10 +28,10 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
   const appContext = useContext(AppCtx); // preferible
 
   // Which is the difference?
-  console.log("Received context", appContext);
-  console.log("Global context", useAppCtx());
+  // console.log("Received context", appContext);
+  // console.log("Global context", useAppCtx());
 
-  console.log("cardObj", cardObj);
+  // console.log("cardObj", cardObj);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [card, setCard] = useState<CardModel>();
@@ -48,13 +48,13 @@ export const Card: React.FC<props> = ({ cardObj, updateCurrentCard }) => {
     if (appContext !== undefined) {
       setCard(appContext);
       setIsLoaded(true);
-      console.log("Loading card from appContext");
+      // console.log("Loading card from appContext");
     } else {
-      console.log("Receiving undefined card appContext");
+      // console.log("Receiving undefined card appContext");
       let url = window.location.pathname;
       let currentIdCard = url.split("/")[2];
-      console.log(url.split("/"));
-      console.log(currentIdCard);
+      // console.log(url.split("/"));
+      // console.log(currentIdCard);
       if (updateCurrentCard) {
         updateCurrentCard(currentIdCard);
       }

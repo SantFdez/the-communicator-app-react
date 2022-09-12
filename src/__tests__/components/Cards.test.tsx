@@ -4,25 +4,21 @@ import "@testing-library/jest-dom/extend-expect";
 import { Cards } from "../../components/Cards";
 import { App } from "../../components/App";
 import { dataCardList } from "../../mocks/handlers";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+
 
 test("consume API correctly ", async () => {
-//   beforeAll(() => {
-//     Object.defineProperty(window, "matchMedia", {
-//       writable: true,
-//       value: jest.fn().mockImplementation((query) => ({
-//         matches: false,
-//         media: query,
-//         onchange: null,
-//         addListener: jest.fn(),
-//         removeListener: jest.fn(),
-//         addEventListener: jest.fn(),
-//         removeEventListener: jest.fn(),
-//         dispatchEvent: jest.fn(),
-//       })),
-//     });
-//   });
+  const onCardClick = () => {};
+  const updateCardId = "";
 
-  const component = render(<App />);
+  const component = render(
+    <ChakraProvider>
+      <BrowserRouter>
+        <Cards onCardClick={onCardClick} updateCardId={updateCardId} />
+      </BrowserRouter>
+    </ChakraProvider>
+  );
 
   await waitFor(() => {
     const listOfCards = component.getByTestId("card-list");
@@ -32,6 +28,5 @@ test("consume API correctly ", async () => {
     });
   });
 });
-
 
 test("allows Cards get list", async () => {});

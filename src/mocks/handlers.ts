@@ -396,7 +396,7 @@ export const dataCardList: CardModel[] = [
 export const handlers = [
   // Handles a GET request
   rest.get(
-    "https://mockend.com/SantFdez/the-communicator-app-react/cards?limit=40",
+    "https://mockend.com/SantFdez/the-communicator-app-react/cards",
     (req, res, ctx) => {
       return res(ctx.status(200), ctx.json(dataCardList));
     }

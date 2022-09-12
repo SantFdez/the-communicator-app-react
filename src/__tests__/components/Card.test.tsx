@@ -4,8 +4,9 @@ import "@testing-library/jest-dom/extend-expect";
 import { Card } from "../../components/Card";
 import { CardModel } from "../../models/Card";
 import { AppCtx } from "../../components/App";
+import { ChakraProvider } from "@chakra-ui/react";
 
-test("category name renders with correct text",async () => {
+test("category name renders with correct text", async () => {
   const card: CardModel = {
     id: 1,
     title: "Question to test Title",
@@ -15,13 +16,15 @@ test("category name renders with correct text",async () => {
     question: "This is a test question",
   };
 
-//   const component = render(
-//     <AppCtx.Provider value={ card }>
-//       <Card />
-//     </AppCtx.Provider>
-//   );
+  const component = render(
+    <ChakraProvider>
+      <AppCtx.Provider value={card}>
+        <Card />
+      </AppCtx.Provider>
+    </ChakraProvider>
+  );
 
-//   const categoryName = component.getByTestId("categoryName");
+  const categoryName = component.getByTestId("categoryName");
 
-//   expect(categoryName.textContent).toBe(card.categoryName);
+  expect(categoryName.textContent).toBe(card.categoryName);
 });
